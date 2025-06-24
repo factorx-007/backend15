@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: farmacia-backend
+    env: node
+    build:
+      dockerfile: Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DB_NAME
+        fromDatabase:
+          name: postgres
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: postgres
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: postgres
+          property: port
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 24h
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+databases:
+  - name: postgres
+    databaseName: farmacia_db
+    user: postgres
+    plan: free
