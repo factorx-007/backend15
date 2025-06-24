@@ -1,27 +1,34 @@
 require('dotenv').config();
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize(process.env.URI, {
-  dialect: 'postgres', // Ya está incluido en tu URI, pero es buena práctica especificarlo.
-  logging: process.env.NODE_ENV === 'development' ? console.log : false,
-  define: {
-    timestamps: true,
-    underscored: true,
-  },
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  },
-  // **MUY IMPORTANTE para Supabase:** Agrega las opciones SSL
-  dialectOptions: {
-    ssl: {
-      require: true, // Esto es crucial para Supabase
-      rejectUnauthorized: false, // Puedes cambiar a true en producción si usas un certificado CA
+// Usar variables de entorno individuales
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    dialect: 'postgres',
+    logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    define: {
+      timestamps: true,
+      underscored: true,
     },
-  },
-});
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    },
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    }
+  }
+);
 
 module.exports = {
   sequelize,
