@@ -35,5 +35,5 @@ RUN chmod +x /app/wait-for-it.sh
 # Puerto de la aplicación
 EXPOSE 3000
 
-# Comando de inicio: espera la base de datos y luego ejecuta la app
-CMD ["/app/wait-for-it.sh", "${DB_HOST:-db}:${DB_PORT:-5432}", "--", "npm", "run", "start"]
+# Comando de inicio: espera la base de datos y luego ejecuta la app (expansión de variables habilitada)
+CMD /app/wait-for-it.sh "$DB_HOST:$DB_PORT" -- npm run start
