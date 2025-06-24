@@ -19,6 +19,9 @@ COPY . .
 # Etapa de producción
 FROM node:18-alpine
 
+# Instalar netcat para el script wait-for-it
+RUN apk add --no-cache netcat-openbsd
+
 WORKDIR /app
 
 # Copiar dependencias y código construido desde la etapa de construcción
@@ -26,8 +29,10 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/ ./
 
+# Hacer el script ejecutable
+RUN chmod +x /app/wait-for-it.sh
+
 # Puerto de la aplicación
 EXPOSE 3000
 
-# Comando para iniciar la aplicación
-CMD ["npm", "start"]
+# El comando ahora se manejará desde render.yaml

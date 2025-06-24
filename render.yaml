@@ -4,6 +4,10 @@ services:
     env: node
     build:
       dockerfile: Dockerfile
+    # Add a command to wait for the database before starting
+    command: >-
+      ./wait-for-it.sh $DB_HOST:$DB_PORT --timeout=30 --strict --
+      node src/app.js
     envVars:
       - key: NODE_ENV
         value: production
